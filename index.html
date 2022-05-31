@@ -1,30 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Welcome to the Quiz</title>
   <link rel="stylesheet" href="./style.css" />
-  <script src="./script.js" ></script>
 </head>
+
 <body>
   <header>
     <!-- view high scores button  reveals a modal-->
-    <span>Highscores</span>
+    <span>High Scores</span>
     <!-- timer changes to 75 when start button is pressed-->
-    <span>0</span>
+    <span class="timer">0</span>
   </header>
   <section>
-    <div>
+    <div class="quiz_Container">
       <!-- title -->
       <!-- title changes to question -->
-      <h1>Coding Quiz Challenge</h1> 
+      <p>Coding Quiz Challenge</p>
       <!-- description of game -->
       <!-- description changes to button group -->
-      <p>Try to answer all the questions within the time limit. A wrong answer will penalize you by ten seconds. The time you have left will be your score.Good luck!</p>
+      <div class="quiz_ContainerDesc">Try to answer all the questions within the time limit. A wrong answer will
+        penalize you by ten seconds. The time you have left will be your score.Good luck!</div>
       <!-- start button -->
-      <button onclick="init">Start</button>
+      <button class="initBtn">Start</button>
     </div>
     <form>
 
@@ -35,4 +37,5 @@
     </div>
   </section>
 </body>
+<script type="module" src="./script.js"></script>
 </html>
