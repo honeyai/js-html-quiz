@@ -32,6 +32,7 @@ const makeButtonGroup = () => {
       button.setAttribute(`data-answer`, `${ans}`);
       button.classList.add("quizAnswerButton");
       console.log("attribute", button.dataset.answer);
+      button.onclick = (e) => isCorrect(e);
       quizAnswers.appendChild(button);
     }
   }
@@ -50,6 +51,21 @@ const initQuiz = (array) => {
   }
 }
 
+//add event listener that will check if the button chose is correct.
+const isCorrect = (e) => {
+  e.preventDefault();
+  console.log("answer", quesObj.correct_answer);
+  console.log(e.target);
+  if(e.target.dataset.answer === quesObj.correct_answer) {
+    console.log("correct");
+    //points go up
+  } else {
+    console.log("wrong");
+    //-10 seconds from the timer
+    seconds -= 10;
+    timer.textContent = seconds;
+  }
+}
 
 
 //Init will:
@@ -72,3 +88,4 @@ initBtn.addEventListener("click", () => {
   //Make the button group
   makeButtonGroup();
 })
+
