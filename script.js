@@ -3,35 +3,72 @@ import * as q from "./quiz.js";
 const quiz = q.quiz;
 const quizTitleQues = document.querySelector(".quiz_Container p");
 let timer = document.querySelector(".timer");
+let seconds;
+let currentQuestion;
+let quesObj;
 const initBtn = document.querySelector(".initBtn");
+const quizAnswers = document.querySelector(".quiz_ContainerDesc");
 
-//Random index
-const randIndex = (length) => Math.floor(Math.random() * length);
+const startTimer = () => {
+  console.log("timer", timer.textContent);
+  let interval = setInterval(() => {
+    seconds--;
+    timer.textContent = seconds;
+    if (seconds === 0) {
+      clearInterval(interval);
+      //game over screen
+    }
+  }, 1000)
+}
+
+const makeButtonGroup = () => {
+  for (const ans in quesObj.answers) {
+    //make the label and button for each from the quiz_ContainerDesc
+    if (quesObj.answers[ans] === null) {
+      console.log("don't render");
+    } else {
+      let button = document.createElement('button');
+      button.innerHTML = quesObj.answers[ans];
+      button.setAttribute(`data-answer`, `${ans}`);
+      button.classList.add("quizAnswerButton");
+      console.log("attribute", button.dataset.answer);
+      quizAnswers.appendChild(button);
+    }
+  }
+}
+
+//initQuiz will:
+//randomize all array without dupes: source: fisher-yaters shuffle: https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
+//it checks if the element is already in the given array and if it isn't the function continues
+const initQuiz = (array) => {
+  let currentIndex = array.length, randomIndex;
+  while (currentIndex != 0) {
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+    [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+    return array;
+  }
+}
+
+
 
 //Init will:
 // -change the display of .quiz_Container h1 to a random question
 // -change the display of .quiz_ContainerDesc to a button group that are the ans choices
 // -will start the timer
-
-const startTimer = () => {
-  while(timer.innerHTML > 0) {
-    console.log("timer", timer.innerHTML);
-
-    timer.innerHTML = timer.innerHTML--;
-  }
-  clearInterval(startTimer);
-}
-
 initBtn.addEventListener("click", () => {
-  console.log("started");
-  console.log("quizTitleQues", quizTitleQues);
-  console.log("timer", timer);
-  console.log("quiz", quiz.length);
-  console.log("rand", randIndex(quiz.length));
   //Start timer at 70
-  timer.innerHTML=70;
+  timer.innerHTML = 70;
+  seconds = timer.innerHTML;
+  //randomizes quiz
+  initQuiz(quiz);
   //This will write a random quiz question to the element
-  quizTitleQues.innerHTML=quiz[randIndex(quiz.length)].question;
-  setInterval(startTimer, 1000);
-  console.log("past the interval")
+  let current = 0;
+  quesObj = quiz[current];
+  console.log(quiz);
+  currentQuestion = quesObj.question;
+  quizTitleQues.innerHTML = currentQuestion;
+  startTimer();
+  //Make the button group
+  makeButtonGroup();
 })
