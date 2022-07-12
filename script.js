@@ -2,21 +2,26 @@ import * as q from "./quiz.js";
 
 const quiz = q.quiz;
 const quizTitleQues = document.querySelector(".quiz_Container p");
+const initBtn = document.querySelector(".initBtn");
+const quizAnswers = document.querySelector(".quiz_ContainerDesc");
+const pointCont = document.querySelector(".header_right");
 let current = 0;
 let timer = document.querySelector(".timer");
 let seconds;
 let currentQuestion;
 let quesObj;
 let points = 0;
-const initBtn = document.querySelector(".initBtn");
-const quizAnswers = document.querySelector(".quiz_ContainerDesc");
 
 const startTimer = () => {
   console.log("timer", timer.textContent);
   let interval = setInterval(() => {
-    seconds--;
-    timer.textContent = seconds;
-    if (seconds === 0) {
+    if (seconds < 0) {
+      timer.textContent = 0;
+    } else {
+      seconds--;
+      timer.textContent = seconds;
+    }
+    if (seconds <= 0) {
       clearInterval(interval);
       //game over screen
     }
@@ -24,11 +29,10 @@ const startTimer = () => {
 }
 
 //clear the div
-const clear= () => quizAnswers.innerHTML = '';
+const clear = () => quizAnswers.innerHTML = '';
 
 const makeButtonGroup = () => {
   clear();
-  console.log("in div", quizTitleQues);
   for (const ans in quesObj.answers) {
     //make the label and button for each from the quiz_ContainerDesc
     if (quesObj.answers[ans] === null) {
@@ -61,18 +65,23 @@ const initQuiz = (array) => {
 //add event listener that will check if the button chose is correct.
 const isCorrect = (e) => {
   e.preventDefault();
-  if(e.target.dataset.answer === quesObj.correct_answer) {
+  if (e.target.dataset.answer === quesObj.correct_answer) {
     console.log("correct");
     //points go up
-    points += 10;
+    points = points + 10;
+    pointCont.innerHTML = points;
     //next question;
     current++
     setCurrentQuestion();
   } else {
     console.log("wrong");
     //-10 seconds from the timer
-    seconds -= 10;
-    timer.textContent = seconds;
+    if (seconds < 0) {
+      timer.textContent = 0;
+    } else {
+      seconds -= 10;
+      timer.textContent = seconds;
+    }
   }
 }
 
@@ -81,8 +90,8 @@ const setCurrentQuestion = () => {
   console.log(quiz);
   currentQuestion = quesObj.question;
   quizTitleQues.innerHTML = currentQuestion;
-   //Make the button group
-   makeButtonGroup();  
+  //Make the button group
+  makeButtonGroup();
 }
 
 //Init will:
