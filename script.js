@@ -7,10 +7,6 @@ const quizAnswers = document.querySelector(".quiz_ContainerDesc");
 const pointCont = document.querySelector(".header_right");
 const verdictCont = document.querySelector(".verdict_Container");
 const section = document.querySelector(".section"); 
-const form = document.querySelector(".highscore_form");
-const hsButton = document.querySelector(".highscore_submit");
-const name = document.querySelector("#name");
-const highscore = document.querySelector(".highscore_span");
 
 let current = 0;
 let timer = document.querySelector(".timer");
@@ -24,7 +20,6 @@ let interval;
 const startTimer = () => {
   timer.innerHTML = 70;
   seconds = timer.innerHTML;
-  console.log("timer", timer.textContent);
   interval = setInterval(() => {
     if (seconds < 0) {
       timer.textContent = 0;
@@ -75,13 +70,13 @@ const createForm = () => {
 }
 
 function submitHighscore() {
-  console.log("submiting", name);
+  const name = document.querySelector("#name");
+  const highscore = document.querySelector(".highscore_span");
   let highscoreStore = {
     name: name.value,
     score: highscore.innerHTML
   }
   localStorage.setItem("highscores", JSON.stringify(highscoreStore));
-  
 }
 
 //game over
@@ -92,14 +87,10 @@ function gameOver() {
   timeRemaining = timer.innerHTML;
   //create form for hs
   createForm();
-  //restart button
-  initBtn.style.display = 'block';
   let gameOverText = document.createElement("p");
   gameOverText.innerHTML = "Game Over.";
   gameOverText.classList.add("gameover_text");
   section.appendChild = gameOverText;
-  //store info in local storage
-
 }
 
 //clear the div
