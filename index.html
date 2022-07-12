@@ -13,22 +13,19 @@
   <header>
     <div class="header_Left">
       <!-- view high scores button  reveals a modal-->
-      <span>High Scores</span>
+      <a href="#"><p>High Scores</p></a>
       <!-- timer changes to 75 when start button is pressed-->
+      <span class="time_remaining">Time Left:</span>
       <span class="timer">0</span>
     </div>
     <div class="points_container">
-      <p>Score: </p>
+      <span>Score: </span>
       <span class="header_right">0</span>
     </div>
   </header>
   <section class="section">
     <div class="quiz_Container">
-      <!-- title -->
-      <!-- title changes to question -->
       <p>Coding Quiz Challenge</p>
-      <!-- description of game -->
-      <!-- description changes to button group -->
       <div class="quiz_ContainerDesc">
         Try to answer all the questions within the time limit. A wrong answer will
         penalize you by ten seconds. The time you have left will be your score. Good luck!
@@ -36,9 +33,6 @@
       <!-- start button -->
       <button class="initBtn">Start</button>
     </div>
-    <form>
-      <!-- on game end reveal highscore submit -->
-    </form>
     <div class="verdict_Container">
       <!-- says whether or not you're right -->
     </div>

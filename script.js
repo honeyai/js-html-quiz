@@ -7,18 +7,25 @@ const quizAnswers = document.querySelector(".quiz_ContainerDesc");
 const pointCont = document.querySelector(".header_right");
 const verdictCont = document.querySelector(".verdict_Container");
 const section = document.querySelector(".section"); 
+const form = document.querySelector(".highscore_form");
+const hsButton = document.querySelector(".highscore_submit");
+const name = document.querySelector("#name");
+const highscore = document.querySelector(".highscore_span");
+
 let current = 0;
 let timer = document.querySelector(".timer");
 let seconds;
 let currentQuestion;
 let quesObj;
 let points = 0;
+let timeRemaining;
+let interval;
 
 const startTimer = () => {
   timer.innerHTML = 70;
   seconds = timer.innerHTML;
   console.log("timer", timer.textContent);
-  let interval = setInterval(() => {
+  interval = setInterval(() => {
     if (seconds < 0) {
       timer.textContent = 0;
     } else {
@@ -28,18 +35,71 @@ const startTimer = () => {
     if (seconds <= 0) {
       clearInterval(interval);
       //game over screen
-      gameover();
+      gameOver();
     }
   }, 1000)
 }
 
+//creates the highscore form
+const createForm = () => {
+  let form = document.createElement("form");
+  let nameLabel = document.createElement("label");
+  nameLabel.setAttribute("for", "name");
+  nameLabel.classList.add("highscore_name");
+  nameLabel.innerHTML = "Name"
+  let highscoreLabel = document.createElement("label");
+  highscoreLabel.setAttribute("for", "highscore");
+  highscoreLabel.classList.add("highscore_label");
+  highscoreLabel.innerHTML = 'Highscore:';
+  let highscoreSpan = document.createElement("span");
+  highscoreSpan.classList.add("highscore_span");
+  highscoreSpan.innerHTML = `${+points + +timeRemaining}`;
+  let inputText = document.createElement("input");
+  inputText.type = "text";
+  inputText.id = "name"
+  inputText.setAttribute("for", "name");
+  inputText.classList.add("highscore_textInput");
+  let submitBtn = document.createElement("button");
+  submitBtn.innerHTML = "Submit";
+  submitBtn.classList.add("highscore_submit");
+  submitBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    submitHighscore();
+  })
+  form.appendChild(highscoreLabel);
+  form.appendChild(highscoreSpan);
+  form.appendChild(nameLabel);
+  form.appendChild(inputText);
+  form.appendChild(submitBtn);
+  section.appendChild(form);
+}
+
+function submitHighscore() {
+  console.log("submiting", name);
+  let highscoreStore = {
+    name: name.value,
+    score: highscore.innerHTML
+  }
+  localStorage.setItem("highscores", JSON.stringify(highscoreStore));
+  
+}
+
 //game over
-function gameover() {
+function gameOver() {
   clear(section);
-  section.innerHTML = "Game over";
-  //reveal form for hs
+  clearInterval(interval);
+  //time remaining
+  timeRemaining = timer.innerHTML;
+  //create form for hs
+  createForm();
   //restart button
-  //
+  initBtn.style.display = 'block';
+  let gameOverText = document.createElement("p");
+  gameOverText.innerHTML = "Game Over.";
+  gameOverText.classList.add("gameover_text");
+  section.appendChild = gameOverText;
+  //store info in local storage
+
 }
 
 //clear the div
@@ -84,7 +144,6 @@ const isCorrect = (e) => {
     //points go up
     points = points + 10;
     pointCont.innerHTML = points;
-    //next question;
     current++
     setCurrentQuestion();
   } else {
@@ -116,12 +175,18 @@ function verdict(verdict) {
 }
 
 const setCurrentQuestion = () => {
-  quesObj = quiz[current];
-  console.log(quiz);
-  currentQuestion = quesObj.question;
-  quizTitleQues.innerHTML = currentQuestion;
-  //Make the button group
-  makeButtonGroup();
+  if(current < quiz.length){
+    //next question;
+    quesObj = quiz[current];
+    console.log(quiz);
+    currentQuestion = quesObj.question;
+    quizTitleQues.innerHTML = currentQuestion;
+    //Make the button group
+    makeButtonGroup();
+  } else {
+    //trigger game over
+    gameOver();
+  }
 }
 
 //Init will:
@@ -129,6 +194,7 @@ const setCurrentQuestion = () => {
 // -change the display of .quiz_ContainerDesc to a button group that are the ans choices
 // -will start the timer
 initBtn.addEventListener("click", () => {
+  initBtn.style.display = 'none';
   //randomizes quiz
   initQuiz(quiz);
   //This will write a random quiz question to the element
