@@ -2,10 +2,12 @@ import * as q from "./quiz.js";
 
 const quiz = q.quiz;
 const quizTitleQues = document.querySelector(".quiz_Container p");
+let current = 0;
 let timer = document.querySelector(".timer");
 let seconds;
 let currentQuestion;
 let quesObj;
+let points = 0;
 const initBtn = document.querySelector(".initBtn");
 const quizAnswers = document.querySelector(".quiz_ContainerDesc");
 
@@ -21,7 +23,12 @@ const startTimer = () => {
   }, 1000)
 }
 
+//clear the div
+const clear= () => quizAnswers.innerHTML = '';
+
 const makeButtonGroup = () => {
+  clear();
+  console.log("in div", quizTitleQues);
   for (const ans in quesObj.answers) {
     //make the label and button for each from the quiz_ContainerDesc
     if (quesObj.answers[ans] === null) {
@@ -54,11 +61,13 @@ const initQuiz = (array) => {
 //add event listener that will check if the button chose is correct.
 const isCorrect = (e) => {
   e.preventDefault();
-  console.log("answer", quesObj.correct_answer);
-  console.log(e.target);
   if(e.target.dataset.answer === quesObj.correct_answer) {
     console.log("correct");
     //points go up
+    points += 10;
+    //next question;
+    current++
+    setCurrentQuestion();
   } else {
     console.log("wrong");
     //-10 seconds from the timer
@@ -67,6 +76,14 @@ const isCorrect = (e) => {
   }
 }
 
+const setCurrentQuestion = () => {
+  quesObj = quiz[current];
+  console.log(quiz);
+  currentQuestion = quesObj.question;
+  quizTitleQues.innerHTML = currentQuestion;
+   //Make the button group
+   makeButtonGroup();  
+}
 
 //Init will:
 // -change the display of .quiz_Container h1 to a random question
@@ -79,13 +96,7 @@ initBtn.addEventListener("click", () => {
   //randomizes quiz
   initQuiz(quiz);
   //This will write a random quiz question to the element
-  let current = 0;
-  quesObj = quiz[current];
-  console.log(quiz);
-  currentQuestion = quesObj.question;
-  quizTitleQues.innerHTML = currentQuestion;
+  setCurrentQuestion();
   startTimer();
-  //Make the button group
-  makeButtonGroup();
-})
+});
 
